@@ -80,9 +80,9 @@ Nome da porta | Interface Virtual | MAC
 Todas as portas são interagíveis através de interfaces ethernet virtuais
 inicializadas junto com o switch.
 Por exemplo, para monitorar todos os pacotes que saem da Porta 3 do switch
-basta monitorar a 'veth6':
+basta monitorar a 'veth16':
 ```bash
-sudo tcpdump -i veth6
+sudo tcpdump -i veth16
 ```
 
 
