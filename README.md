@@ -35,7 +35,7 @@ docker exec -ti p4studio bash
 ```
 
 Uma vez dentro do container, precisamos instalar as dependências de
-desenvolvimento destre projeto:
+desenvolvimento deste projeto:
 ```bash
 cd project
 ./setup.sh
