@@ -75,7 +75,6 @@ Nome da porta | Interface Virtual | MAC
 1/0 | veth0 | 00:00:00:00:00:01 
 2/0 | veth8 | 00:00:00:00:00:02
 3/0 | veth16 | 00:00:00:00:00:03
-4/0 | veth24 | 00:00:00:00:00:04
 
 Todas as portas são interagíveis através de interfaces ethernet virtuais
 inicializadas junto com o switch.
