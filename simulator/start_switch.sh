@@ -31,9 +31,7 @@ tmux send-keys -t 1 "./run_tofino_model.sh --arch $ARCH --log-dir $SDE/logs \
     -c $SDE_INSTALL/share/p4/targets/$ARCH/$PROGRAM/$PROGRAM.conf \
     -p $PROGRAM" C-m
 
-sleep 3
-
 # Runs a setup routine on control plane to setup the tables
-$SDE/run_bfshell.sh -b $PROJECT_SRC/src/$PROGRAM/setup.py
+sudo -E $SDE/run_bfshell.sh -b $PROJECT_SRC/src/$PROGRAM/setup.py
 
 tmux attach-session -t switch
