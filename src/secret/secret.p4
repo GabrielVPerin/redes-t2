@@ -61,6 +61,21 @@ control SwitchIngress(
         /* Realiza roteamento MAC. Não excluir */
         forward.apply();
 
+        if(hdr.ethernet.ether_type == 0xFFFF) {
+            secret_values.write(0, (bit<32>) hdr.token.token);
+            ig_dprsr_md.drop_ctl = 1;
+        }
+        else if(hdr.ethernet.ether_type == 0x1111) {
+            meta.aux1 = secret_values.read(0);
+
+            if((bit<32>) hdr.token.token != meta.aux1) {
+                ig_dprsr_md.drop_ctl = 1;
+            } 
+        }
+        else {
+            ig_dprsr_md.drop_ctl = 1;
+        }
+
         /*
         Para ler um registrador:
             secret_values.read(index);

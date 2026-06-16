@@ -21,9 +21,13 @@ header ethernet_h {
     bit<16> ether_type;
 }
 
+header token_h {
+    bit<16> token;
+}
 
 struct header_t {
     ethernet_h ethernet;
+    token_h token;
 }
 
 // Variáveis metadados auxiliares, caso ache necessário utilizá-las
