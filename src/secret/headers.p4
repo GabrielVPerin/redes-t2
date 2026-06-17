@@ -22,7 +22,7 @@ header ethernet_h {
 }
 
 header token_h {
-    bit<16> token;
+    bit<128> token;
 }
 
 struct header_t {

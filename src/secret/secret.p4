@@ -54,7 +54,10 @@ control SwitchIngress(
     DICA: o mesmo registrador não pode ser acessado mais de uma vez por pacote, e armazenam valores
     de no máximo 32 bits, utilize multiplos registradores
     */
-    Register<bit<32>, bit<1>> (1) secret_values;
+    Register<bit<32>, bit<1>> (1) secret_values1;
+    Register<bit<32>, bit<1>> (1) secret_values2;
+    Register<bit<32>, bit<1>> (1) secret_values3;
+    Register<bit<32>, bit<1>> (1) secret_values4;
 
 
     apply {
@@ -62,14 +65,25 @@ control SwitchIngress(
         forward.apply();
 
         if(hdr.ethernet.ether_type == 0xFFFF) {
-            secret_values.write(0, (bit<32>) hdr.token.token);
+            secret_values1.write(0, hdr.token.token[31:0]);
+            secret_values2.write(0, hdr.token.token[63:32]);
+            secret_values3.write(0, hdr.token.token[95:64]);
+            secret_values4.write(0, hdr.token.token[127:96]);
             ig_dprsr_md.drop_ctl = 1;
         }
         else if(hdr.ethernet.ether_type == 0x1111) {
-            meta.aux1 = secret_values.read(0);
+            meta.aux1 = secret_values1.read(0);
+            meta.aux2 = secret_values2.read(0);
+            meta.aux3 = secret_values3.read(0);
+            meta.aux4 = secret_values4.read(0);
 
-            if((bit<32>) hdr.token.token != meta.aux1) {
+            if(hdr.token.token[31:0] != meta.aux1 &&
+               hdr.token.token[63:32] != meta.aux2 &&
+               hdr.token.token[95:64] != meta.aux3 &&
+               hdr.token.token[127:96] != meta.aux4) {
+
                 ig_dprsr_md.drop_ctl = 1;
+
             } 
         }
         else {
