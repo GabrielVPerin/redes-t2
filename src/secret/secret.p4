@@ -78,14 +78,18 @@ control SwitchIngress(
                 meta.aux3 = secret_values3.read(0);
                 meta.aux4 = secret_values4.read(0);
 
-                if(hdr.token.token[31:0] != meta.aux1 ||
-                   hdr.token.token[63:32] != meta.aux2 ||
-                   hdr.token.token[95:64] != meta.aux3 ||
-                   hdr.token.token[127:96] != meta.aux4) {
-
+                if(hdr.token.token[31:0] != meta.aux1) {
                     ig_dprsr_md.drop_ctl = 1;
-
-                } 
+                }
+                else if(hdr.token.token[63:32] != meta.aux2) {
+                    ig_dprsr_md.drop_ctl = 1;
+                }
+                else if(hdr.token.token[95:64] != meta.aux3) {
+                    ig_dprsr_md.drop_ctl = 1;
+                }
+                else if(hdr.token.token[127:96] != meta.aux4) {
+                    ig_dprsr_md.drop_ctl = 1; 
+                }
             }
             else {
                 ig_dprsr_md.drop_ctl = 1;
