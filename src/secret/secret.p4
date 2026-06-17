@@ -64,27 +64,32 @@ control SwitchIngress(
         /* Realiza roteamento MAC. Não excluir */
         forward.apply();
 
-        if(hdr.ethernet.ether_type == 0xFFFF) {
-            secret_values1.write(0, hdr.token.token[31:0]);
-            secret_values2.write(0, hdr.token.token[63:32]);
-            secret_values3.write(0, hdr.token.token[95:64]);
-            secret_values4.write(0, hdr.token.token[127:96]);
-            ig_dprsr_md.drop_ctl = 1;
-        }
-        else if(hdr.ethernet.ether_type == 0x1111) {
-            meta.aux1 = secret_values1.read(0);
-            meta.aux2 = secret_values2.read(0);
-            meta.aux3 = secret_values3.read(0);
-            meta.aux4 = secret_values4.read(0);
-
-            if(hdr.token.token[31:0] != meta.aux1 &&
-               hdr.token.token[63:32] != meta.aux2 &&
-               hdr.token.token[95:64] != meta.aux3 &&
-               hdr.token.token[127:96] != meta.aux4) {
-
+        if(hdr.token.isValid()) {
+            if(hdr.ethernet.ether_type == 0xFFFF) {
+                secret_values1.write(0, hdr.token.token[31:0]);
+                secret_values2.write(0, hdr.token.token[63:32]);
+                secret_values3.write(0, hdr.token.token[95:64]);
+                secret_values4.write(0, hdr.token.token[127:96]);
                 ig_dprsr_md.drop_ctl = 1;
+            }
+            else if(hdr.ethernet.ether_type == 0x1111) {
+                meta.aux1 = secret_values1.read(0);
+                meta.aux2 = secret_values2.read(0);
+                meta.aux3 = secret_values3.read(0);
+                meta.aux4 = secret_values4.read(0);
 
-            } 
+                if(hdr.token.token[31:0] != meta.aux1 ||
+                   hdr.token.token[63:32] != meta.aux2 ||
+                   hdr.token.token[95:64] != meta.aux3 ||
+                   hdr.token.token[127:96] != meta.aux4) {
+
+                    ig_dprsr_md.drop_ctl = 1;
+
+                } 
+            }
+            else {
+                ig_dprsr_md.drop_ctl = 1;
+            }
         }
         else {
             ig_dprsr_md.drop_ctl = 1;
